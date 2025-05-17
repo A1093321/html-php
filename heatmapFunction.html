@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+	<title>Apex Chart</title>
+
+</head>
+
+<body  bgcolor="#BEBEBE">
+
+	<h1>HeatMap</h1>
+	<!-- <div id="chart"></div> -->
+	<div id="chartTest"></div> <!-- style="width: 800px; height:800px;" --> 
+
+	<script> //heatmap
+
+		function heatmap_chart(dataInput, colorInput, idInput) {
+
+			if (dataInput.length == 0) {
+				console.error("請輸入資料");
+				//return;
+			}
+			datatest = dataInput;
+
+			const defaultColor =['#4d4d00',	'#A3D1D1', '#81C0C0', '#5CADAD', '#408080', '#336666'];
+
+			if (colorInput.length == 6) {
+				// do nothing
+			} else if (colorInput.length == 0) {
+				for (var i = 0; i < defaultColor.length; i++) {
+					colorInput.push(defaultColor[i]);
+				}
+			} else { //輸入顏色數量不等於0或6時，使用預設顏色
+				console.error("輸入數量錯誤，使用預設顏色");
+				colorInput.length = 0;
+				for (var i = 0; i < defaultColor.length; i++) {
+					colorInput.push(defaultColor[i]);
+				}
+			}
+
+			if (idInput == '') {
+				console.error("請輸入id");
+				return;
+			}
+
+			const dataMonday = [];
+			const dataTuesday = [];
+			const dataWednesday = [];
+			const dataThursday = [];
+			const dataFriday = [];
+			const dataSaturday = [];
+			const dataSunday = [];
+
+			var nameMonday = "";
+			var nameTuesday = "";
+			var nameWednesday = "";
+			var nameThursday = "";
+			var nameFriday = "";
+			var nameSaturday = "";
+			var nameSunday = "";
+
+			DataSet = []; // 要讀進去圖表的資料
+
+			const colorScaleOptions = {
+				ranges: [
+					{ from:  0, to:  0, name: '0', color: colorInput[0]},
+					{ from:  1, to: 52, name: '1~52', color: colorInput[1]},
+					{ from: 52, to: 103, name: '52~103', color: colorInput[2]},
+					{ from: 103, to: 154, name: '103~154', color: colorInput[3]},
+					{ from: 154, to: 205, name: '154~205', color: colorInput[4]},
+					{ from: 205, to: 255, name: '205~255', color: colorInput[5]}
+				]
+			};
+
+			for (var i = 0; i < datatest.length; i++) { /*限制是只能處理一個禮拜(例如星期二到下星期一，星期五到下星期四)，且按照每天時間順序(0點~23點)的資料，
+															如果有空值會往前補(例如週一12點沒資料，就用週一13點的補，但週一23點就會空白) */
+				var dateObject = new Date(datatest[i]["date"]);
+				switch (dateObject.getDay()) {
+					case 0:
+						if (nameSunday == ""){
+							nameSunday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週日";
+						}
+						if (dataSunday.length == 0){
+							DataSet.push([nameSunday, dataSunday]);
+						}
+						dataSunday.push(datatest[i]["data"]);
+						break;
+					case 1:
+						if (nameMonday == ""){
+							nameMonday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週一";
+						}
+						if (dataMonday.length == 0){
+							DataSet.push([nameMonday, dataMonday]);
+						}
+						dataMonday.push(datatest[i]["data"]);
+						break;
+					case 2:
+						if (nameTuesday == ""){
+							nameTuesday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週二";
+						}
+						if (dataTuesday.length == 0){
+							DataSet.push([nameTuesday, dataTuesday]);
+						}
+						dataTuesday.push(datatest[i]["data"]);
+						break;
+					case 3:
+						if (nameWednesday == ""){
+							nameWednesday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週三";
+						}
+						if (dataWednesday.length == 0){
+							DataSet.push([nameWednesday, dataWednesday]);
+						}
+						dataWednesday.push(datatest[i]["data"]);
+						break;
+					case 4:
+						if (nameThursday == ""){
+							nameThursday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週四";
+						}
+						if (dataThursday.length == 0){
+							DataSet.push([nameThursday, dataThursday]);
+						}
+						dataThursday.push(datatest[i]["data"]);
+						break;
+					case 5:
+						if (nameFriday == ""){
+							nameFriday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週五";
+						}	
+						if (dataFriday.length == 0){
+							DataSet.push([nameFriday, dataFriday]);
+						}
+						dataFriday.push(datatest[i]["data"]);
+						break;
+					case 6:
+						if (nameSaturday == ""){
+							nameSaturday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週六";
+						}	
+						if (dataSaturday.length == 0){
+							DataSet.push([nameSaturday, dataSaturday]);
+						}
+						dataSaturday.push(datatest[i]["data"]);
+						break;
+				}
+			}
+
+			const xCategories = ["00:00", "01:00",	"02:00", "03:00", "04:00", "05:00", "06:00", "07:00", 
+								"08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", 
+								"16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00" ];
+
+			const xZoomOut = ["0點", "1點", "2點", "3點", "4點", "5點", "6點", "7點", "8點", "9點", "10點", "11點", "12點", 
+							"13點", "14點", "15點", "16點", "17點", "18點", "19點", "20點", "21點", "22點", "23點"]
+			
+			const options = {
+				chart: {
+					height: '',
+					type: 'heatmap'
+				},
+				legend: {
+					position: 'bottom',
+					fontSize: '20px',
+				},
+				plotOptions: {
+					heatmap: {
+						colorScale: colorScaleOptions
+					}
+				},
+				xaxis: {
+					labels: {
+						style: {
+							fontSize: '15px'
+						}
+					},
+					categories: xCategories,
+				},
+				yaxis: {
+					labels: {
+						style: {
+							fontSize: '15px'
+						},
+					}
+				},
+				tooltip: {
+					y: {
+						format: '',
+						formatter: function (val) {
+							if (val > 155) {
+								return '數值是 ' + val + '  (偏高)';
+							} else if (val > 100 && val < 155) {
+								return '數值是 ' + val + '  (中等)';
+							} else if (val < 100) {
+								return '數值是 ' + val + '  (偏低)';
+							} else {
+								return '數值是 ' + val + '  (null)';
+							}
+						}
+					}
+				},
+				dataLabels: {
+					style: {
+						fontSize: '15px',
+						colors: ['#000']
+					},
+				},
+				series: [
+				{
+					name: DataSet[0][0],
+					data: DataSet[0][1]
+				},
+				{
+					name: DataSet[1][0],
+					data: DataSet[1][1]
+				},
+				{
+					name: DataSet[2][0],
+					data: DataSet[2][1]
+				},
+				{
+					name: DataSet[3][0],
+					data: DataSet[3][1]
+				},
+				{
+					name: DataSet[4][0],
+					data: DataSet[4][1]
+				},
+				{
+					name: DataSet[5][0],
+					data: DataSet[5][1]
+				},
+				{
+					name: DataSet[6][0],
+					data: DataSet[6][1]
+				}
+				],
+				responsive: [
+					{
+						breakpoint: 1300,
+						options: {
+							chart: {
+								height: '450'
+							},
+							dataLabels: {
+								style: {
+									fontSize: '10px'
+								},
+								formatter: function (val) {
+									return val;
+								}
+							},
+							yaxis: {
+								labels: {
+									style: {
+										fontSize: '14px'
+									}
+								}
+							},
+							xaxis: {
+								labels: {
+									style: {
+										fontSize: '14px'
+									}
+								},
+								categories: xCategories
+							},
+							legend: {
+								fontSize: '13px'
+							},
+						}
+					},
+					{
+						breakpoint: 900,
+						options: {
+							chart: {
+								height: '400'
+							},
+							dataLabels: {
+								style: {
+									fontSize: '10px'
+								},
+								formatter: function (val) {
+									return Math.round(val);
+								}
+							},
+							yaxis: {
+								labels: {
+									style: {
+										fontSize: '12px'
+									}
+								}
+							},
+							xaxis: {
+								labels: {
+									style: {
+										fontSize: '10px'
+									}
+								},
+								categories: xCategories
+							},
+							legend: {
+								fontSize: '13px',
+							},
+						}
+					},
+					{
+						breakpoint: 545,
+						options: {
+							chart: {
+								height: '350'
+							},
+							dataLabels: {
+								style: {
+									fontSize: '9px'
+								},
+								formatter: function (val) {
+									return Math.round(val);
+								}
+							},
+							yaxis: {
+								labels: {
+									style: {
+										fontSize: '10px'
+									}
+								}
+							},
+							xaxis: {
+								labels: {
+									style: {
+										fontSize: '10px'
+									}
+								},
+								categories: xZoomOut
+							},
+							legend: {
+								fontSize: '7.5px',
+							},
+						}
+					}
+				]
+			};
+			const chart = new ApexCharts(document.querySelector("#" + idInput), options); // chart變成變數
+			return chart;
+		}
+		
+		data = [
+			{"date": "2023-07-25 00:00:00", "data": 124.09},
+			{"date": "2023-07-25 01:00:00", "data": 23.76},
+			{"date": "2023-07-25 02:00:00", "data": 55.42},
+			{"date": "2023-07-25 03:00:00", "data": 212.89},
+			{"date": "2023-07-26 17:00:00", "data": 245.81},
+			{"date": "2023-07-27 07:00:00", "data": 234.86},
+			{"date": "2023-07-27 08:00:00", "data": 75.46},
+			{"date": "2023-07-27 09:00:00", "data": 88.55},
+			{"date": "2023-07-27 10:00:00", "data": 116.01},
+			{"date": "2023-07-27 11:00:00", "data": 153.83},
+			{"date": "2023-07-27 12:00:00", "data": 164.56},
+			{"date": "2023-07-28 17:00:00", "data": 139.45},
+			{"date": "2023-07-28 18:00:00", "data": 226.18},
+			{"date": "2023-07-28 22:00:00", "data": 221.33},
+			{"date": "2023-07-28 23:00:00", "data": 229.77},
+			{"date": "2023-07-29 00:00:00", "data": 105.33},
+			{"date": "2023-07-29 01:00:00", "data": 160.90},
+			{"date": "2023-07-29 02:00:00", "data": 63.28},
+			{"date": "2023-07-30 15:00:00", "data": 189.14},
+			{"date": "2023-07-30 19:00:00", "data": 46.25},
+			{"date": "2023-07-30 20:00:00", "data": 94.61},
+			{"date": "2023-07-31 02:00:00", "data": 129.13},
+			{"date": "2023-07-31 03:00:00", "data": 195.34},
+			];
+
+		data1 = [
+			{"date": "2023-07-25 00:00:00", "data": 124.09},
+			{"date": "2023-07-25 01:00:00", "data": 23.76},
+			{"date": "2023-07-25 02:00:00", "data": 55.42},
+			{"date": "2023-07-25 03:00:00", "data": 212.89},
+			{"date": "2023-07-26 17:00:00", "data": 245.81},
+			{"date": "2023-07-27 07:00:00", "data": 234.86},
+			{"date": "2023-07-28 08:00:00", "data": 75.46},
+			{"date": "2023-07-29 09:00:00", "data": 88.55},
+			{"date": "2023-07-30 10:00:00", "data": 116.01},
+			{"date": "2023-07-31 11:00:00", "data": 153.83}
+		];
+
+		colors = [];
+		colors1 = ['#000000', '#000000', '#000000', '#000000', '#000000', '#000000'];
+
+		id = 'chartTest';
+
+		const chart1 = heatmap_chart(data1, colors, id);
+		chart1.render();
+
+	</script>
+</body>
+
+</html>

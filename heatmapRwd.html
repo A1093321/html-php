@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+	<title>Apex Chart</title>
+
+</head>
+
+<body  bgcolor="#BEBEBE">
+
+	<h1>HeatMap Practice</h1>
+	<div id="chart"></div>
+
+	<script> //heatmap
+		/*
+		const data1 = [10, 41, 69, 91, 148, 35, 51, 49, 62];
+		const data2 = [10, 4, 6, 1, 14, 75, 5, 49, 62];
+		const data3 = [10, 44, 95, 1, 14, 54, 51, 49, 62];
+		const data4 = [0, 34, 9, 1, 14, 35, 1, 49, 27];
+		*/
+
+		const dataMonday = [];
+		const dataTuesday = [];
+		const dataWednesday = [];
+		const dataThursday = [];
+		const dataFriday = [];
+		const dataSaturday = [];
+		const dataSunday = [];
+
+		var nameMonday = "";
+		var nameTuesday = "";
+		var nameWednesday = "";
+		var nameThursday = "";
+		var nameFriday = "";
+		var nameSaturday = "";
+		var nameSunday = "";
+
+		const colorScaleOptions = {
+			ranges: [
+  { from: 0, to: 0, name: '0', color: '#4d4d00' },
+  { from: 1.01, to: 52.49, name: '1~52', color: '#A3C1D1' },
+  { from: 52.5, to: 103.49, name: '52~103', color: '#81C0C0' },
+  { from: 103.5, to: 154.49, name: '103~154', color: '#51ADAD' },
+  { from: 154.5, to: 205.49, name: '154~205', color: '#40aa80' },
+  { from: 205.5, to: 255, name: '205~255', color: '#336266' }
+]
+		};
+
+		// 也可這樣使用
+		const d = {
+			data:[
+				[10, 41, 69, 91, 148, 35, 51, 49, 62],
+				[10, 41, 69, 91, 148, 35, 51, 49, 62],
+				[10, 41, 69, 91, 148, 35, 51, 49, 62],
+			]
+		};
+		// 取值時使用 d["data"][1];
+
+		datatest = [
+			{"date": "2023-07-25 00:00:00", "data": 124.09},
+			{"date": "2023-07-25 01:00:00", "data": 23.76},
+			{"date": "2023-07-25 02:00:00", "data": 55.42},
+			{"date": "2023-07-25 03:00:00", "data": 212.89},
+			{"date": "2023-07-25 04:00:00", "data": 192.11},
+			{"date": "2023-07-25 05:00:00", "data": 128.71},
+			{"date": "2023-07-25 06:00:00", "data": 76.39},
+			{"date": "2023-07-25 07:00:00", "data": 150.12},
+			{"date": "2023-07-25 08:00:00", "data": 231.83},
+			{"date": "2023-07-25 09:00:00", "data": 71.53},
+			{"date": "2023-07-25 10:00:00", "data": 64.94},
+			{"date": "2023-07-25 11:00:00", "data": 221.28},
+			{"date": "2023-07-25 12:00:00", "data": 189.22},
+			{"date": "2023-07-25 13:00:00", "data": 98.77},
+			{"date": "2023-07-25 14:00:00", "data": 173.07},
+			{"date": "2023-07-25 15:00:00", "data": 46.25},
+			{"date": "2023-07-25 16:00:00", "data": 134.55},
+			{"date": "2023-07-25 17:00:00", "data": 151.02},
+			{"date": "2023-07-25 18:00:00", "data": 227.32},
+			{"date": "2023-07-25 19:00:00", "data": 88.35},
+			{"date": "2023-07-25 20:00:00", "data": 202.39},
+			{"date": "2023-07-25 21:00:00", "data": 197.49},
+			{"date": "2023-07-25 22:00:00", "data": 124.62},
+			{"date": "2023-07-25 23:00:00", "data": 112.35},
+			{"date": "2023-07-26 00:00:00", "data": 82.82},
+			{"date": "2023-07-26 01:00:00", "data": 40.90},
+			{"date": "2023-07-26 02:00:00", "data": 207.14},
+			{"date": "2023-07-26 03:00:00", "data": 72.08},
+			{"date": "2023-07-26 04:00:00", "data": 201.80},
+			{"date": "2023-07-26 05:00:00", "data": 202.11},
+			{"date": "2023-07-26 06:00:00", "data": 134.56},
+			{"date": "2023-07-26 07:00:00", "data": 221.72},
+			{"date": "2023-07-26 08:00:00", "data": 119.33},
+			{"date": "2023-07-26 09:00:00", "data": 145.85},
+			{"date": "2023-07-26 10:00:00", "data": 89.01},
+			{"date": "2023-07-26 11:00:00", "data": 57.44},
+			{"date": "2023-07-26 12:00:00", "data": 54.37},
+			{"date": "2023-07-26 13:00:00", "data": 101.72},
+			{"date": "2023-07-26 14:00:00", "data": 35.62},
+			{"date": "2023-07-26 15:00:00", "data": 192.56},
+			{"date": "2023-07-26 16:00:00", "data": 167.22},
+			{"date": "2023-07-26 17:00:00", "data": 245.81},
+			{"date": "2023-07-26 18:00:00", "data": 143.72},
+			{"date": "2023-07-26 19:00:00", "data": 226.05},
+			{"date": "2023-07-26 20:00:00", "data": 236.86},
+			{"date": "2023-07-26 21:00:00", "data": 197.95},
+			{"date": "2023-07-26 22:00:00", "data": 235.61},
+			{"date": "2023-07-26 23:00:00", "data": 229.98},
+			{"date": "2023-07-27 00:00:00", "data": 219.27},
+			{"date": "2023-07-27 01:00:00", "data": 76.22},
+			{"date": "2023-07-27 02:00:00", "data": 31.28},
+			{"date": "2023-07-27 03:00:00", "data": 129.46},
+			{"date": "2023-07-27 04:00:00", "data": 95.95},
+			{"date": "2023-07-27 05:00:00", "data": 167.68},
+			{"date": "2023-07-27 06:00:00", "data": 74.48},
+			{"date": "2023-07-27 07:00:00", "data": 234.86},
+			{"date": "2023-07-27 08:00:00", "data": 75.46},
+			{"date": "2023-07-27 09:00:00", "data": 88.55},
+			{"date": "2023-07-27 10:00:00", "data": 116.01},
+			{"date": "2023-07-27 11:00:00", "data": 153.83},
+			{"date": "2023-07-27 12:00:00", "data": 164.56},
+			{"date": "2023-07-27 13:00:00", "data": 106.46},
+			{"date": "2023-07-27 14:00:00", "data": 159.60},
+			{"date": "2023-07-27 15:00:00", "data": 223.92},
+			{"date": "2023-07-27 16:00:00", "data": 45.34},
+			{"date": "2023-07-27 17:00:00", "data": 219.02},
+			{"date": "2023-07-27 18:00:00", "data": 116.15},
+			{"date": "2023-07-27 19:00:00", "data": 212.58},
+			{"date": "2023-07-27 20:00:00", "data": 242.26},
+			{"date": "2023-07-27 21:00:00", "data": 150.04},
+			{"date": "2023-07-27 22:00:00", "data": 195.93},
+			{"date": "2023-07-27 23:00:00", "data": 35.53},
+			{"date": "2023-07-28 00:00:00", "data": 244.14},
+			{"date": "2023-07-28 01:00:00", "data": 200.73},
+			{"date": "2023-07-28 02:00:00", "data": 126.13},
+			{"date": "2023-07-28 03:00:00", "data": 187.49},
+			{"date": "2023-07-28 04:00:00", "data": 144.35},
+			{"date": "2023-07-28 05:00:00", "data": 183.51},
+			{"date": "2023-07-28 06:00:00", "data": 56.41},
+			{"date": "2023-07-28 07:00:00", "data": 210.89},
+			{"date": "2023-07-28 08:00:00", "data": 109.08},
+			{"date": "2023-07-28 09:00:00", "data": 41.39},
+			{"date": "2023-07-28 10:00:00", "data": 228.32},
+			{"date": "2023-07-28 11:00:00", "data": 125.61},
+			{"date": "2023-07-28 12:00:00", "data": 122.62},
+			{"date": "2023-07-28 13:00:00", "data": 0},
+			{"date": "2023-07-28 14:00:00", "data": 209.68},
+			{"date": "2023-07-28 15:00:00", "data": 134.91},
+			{"date": "2023-07-28 16:00:00", "data": 98.16},
+			{"date": "2023-07-28 17:00:00", "data": 139.45},
+			{"date": "2023-07-28 18:00:00", "data": 226.18},
+			{"date": "2023-07-28 19:00:00", "data": 183.15},
+			{"date": "2023-07-28 20:00:00", "data": 237.07},
+			{"date": "2023-07-28 21:00:00", "data": 29.82},
+			{"date": "2023-07-28 22:00:00", "data": 221.33},
+			{"date": "2023-07-28 23:00:00", "data": 229.77},
+			{"date": "2023-07-29 00:00:00", "data": 105.33},
+			{"date": "2023-07-29 01:00:00", "data": 160.90},
+			{"date": "2023-07-29 02:00:00", "data": 63.28},
+			{"date": "2023-07-29 03:00:00", "data": 157.04},
+			{"date": "2023-07-29 04:00:00", "data": 123.28},
+			{"date": "2023-07-29 05:00:00", "data": 98.71},
+			{"date": "2023-07-29 06:00:00", "data": 246.64},
+			{"date": "2023-07-29 07:00:00", "data": 99.27},
+			{"date": "2023-07-29 08:00:00", "data": 150.03},
+			{"date": "2023-07-29 09:00:00", "data": 206.39},
+			{"date": "2023-07-29 10:00:00", "data": 54.41},
+			{"date": "2023-07-29 11:00:00", "data": 156.11},
+			{"date": "2023-07-29 12:00:00", "data": 171.03},
+			{"date": "2023-07-29 13:00:00", "data": 219.86},
+			{"date": "2023-07-29 14:00:00", "data": 13.90},
+			{"date": "2023-07-29 15:00:00", "data": 68.94},
+			{"date": "2023-07-29 16:00:00", "data": 187.92},
+			{"date": "2023-07-29 17:00:00", "data": 0},
+			{"date": "2023-07-29 18:00:00", "data": 244.39},
+			{"date": "2023-07-29 19:00:00", "data": 68.87},
+			{"date": "2023-07-29 20:00:00", "data": 83.69},
+			{"date": "2023-07-29 21:00:00", "data": 231.38},
+			{"date": "2023-07-29 22:00:00", "data": 193.48},
+			{"date": "2023-07-29 23:00:00", "data": 106.08},
+			{"date": "2023-07-30 00:00:00", "data": 77.98},
+			{"date": "2023-07-30 01:00:00", "data": 153.36},
+			{"date": "2023-07-30 02:00:00", "data": 110.56},
+			{"date": "2023-07-30 03:00:00", "data": 223.82},
+			{"date": "2023-07-30 04:00:00", "data": 201.32},
+			{"date": "2023-07-30 05:00:00", "data": 55.18},
+			{"date": "2023-07-30 06:00:00", "data": 100.03},
+			{"date": "2023-07-30 07:00:00", "data": 62.69},
+			{"date": "2023-07-30 08:00:00", "data": 143.38},
+			{"date": "2023-07-30 09:00:00", "data": 68.88},
+			{"date": "2023-07-30 10:00:00", "data": 152.78},
+			{"date": "2023-07-30 11:00:00", "data": 96.37},
+			{"date": "2023-07-30 12:00:00", "data": 18.13},
+			{"date": "2023-07-30 13:00:00", "data": 116.13},
+			{"date": "2023-07-30 14:00:00", "data": 170.29},
+			{"date": "2023-07-30 15:00:00", "data": 189.14},
+			{"date": "2023-07-30 16:00:00", "data": 30.02},
+			{"date": "2023-07-30 17:00:00", "data": 104.13},
+			{"date": "2023-07-30 18:00:00", "data": 106.51},
+			{"date": "2023-07-30 19:00:00", "data": 46.25},
+			{"date": "2023-07-30 20:00:00", "data": 94.61},
+			{"date": "2023-07-30 21:00:00", "data": 241.15},
+			{"date": "2023-07-30 22:00:00", "data": 177.47},
+			{"date": "2023-07-30 23:00:00", "data": 19.79},
+			{"date": "2023-07-31 00:00:00", "data": 218.14},
+			{"date": "2023-07-31 01:00:00", "data": 180.17},
+			{"date": "2023-07-31 02:00:00", "data": 129.13},
+			{"date": "2023-07-31 03:00:00", "data": 195.34},
+			{"date": "2023-07-31 04:00:00", "data": 69.63},
+			{"date": "2023-07-31 05:00:00", "data": 111.06},
+			{"date": "2023-07-31 06:00:00", "data": 64.47},
+			{"date": "2023-07-31 07:00:00", "data": 243.09},
+			{"date": "2023-07-31 08:00:00", "data": 199.94},
+			{"date": "2023-07-31 09:00:00", "data": 39.03},
+			{"date": "2023-07-31 10:00:00", "data": 93.04}
+	  ];
+
+		/* 此為文字處理，以日期格式處理較合理
+		var test = "2023-07-31";
+		var week = new Date(test).getDay();
+		console.log(datatest[100]["date"].substr(0, 10));
+		console.log(new Date(datatest[100]["date"]).getDay());
+		console.log(week);
+		
+		for (var i = 0; i <datatest.length; i++) {
+			if (datatest[i]["date"].includes("2023-07-25")) {
+				dataTuesday.push(datatest[i]["data"]);
+			}
+			if (datatest[i]["date"].includes("2023-07-26")) {
+				dataWednesday.push(datatest[i]["data"]);
+			}
+			if (datatest[i]["date"].includes("2023-07-27")) {
+				dataThursday.push(datatest[i]["data"]);
+			}
+			if (datatest[i]["date"].includes("2023-07-28")) {
+				dataFriday.push(datatest[i]["data"]);
+			}
+			if (datatest[i]["date"].includes("2023-07-29")) {
+				dataSaturday.push(datatest[i]["data"]);
+			}
+			if (datatest[i]["date"].includes("2023-07-30")) {
+				dataSunday.push(datatest[i]["data"]);
+			}
+			if (datatest[i]["date"].includes("2023-07-31")) {
+				dataMonday.push(datatest[i]["data"]);
+			}
+		}
+		*/
+		DataSet = [];
+
+		for (var i = 0; i < datatest.length; i++) { /*限制是只能處理一個禮拜(例如星期二到下星期一，星期五到下星期四)，且按照日期順序(例如 9/1 ~ 9/7，7/29 ~ 8/4 )、時間順序(0點~23點)的資料，
+														如果有空值會往前補(例如週一12點沒資料，就用週一13點的補，但週一23點就會空白) */
+			var dateObject = new Date(datatest[i]["date"]);
+			switch (dateObject.getDay()) {
+				case 0:
+					if (nameSunday == ""){
+						nameSunday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週日";
+					}
+					if (dataSunday.length == 0){
+						DataSet.push([nameSunday, dataSunday]);
+					}
+					dataSunday.push(datatest[i]["data"]);
+					break;
+				case 1:
+					if (nameMonday == ""){
+						nameMonday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週一";
+					}
+					if (dataMonday.length == 0){
+						DataSet.push([nameMonday, dataMonday]);
+					}
+					dataMonday.push(datatest[i]["data"]);
+					break;
+				case 2:
+					if (nameTuesday == ""){
+						nameTuesday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週二";
+					}
+					if (dataTuesday.length == 0){
+						DataSet.push([nameTuesday, dataTuesday]);
+					}
+					dataTuesday.push(datatest[i]["data"]);
+					break;
+				case 3:
+					if (nameWednesday == ""){
+						nameWednesday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週三";
+					}
+					if (dataWednesday.length == 0){
+						DataSet.push([nameWednesday, dataWednesday]);
+					}
+					dataWednesday.push(datatest[i]["data"]);
+					break;
+				case 4:
+					if (nameThursday == ""){
+						nameThursday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週四";
+					}
+					if (dataThursday.length == 0){
+						DataSet.push([nameThursday, dataThursday]);
+					}
+					dataThursday.push(datatest[i]["data"]);
+					break;
+				case 5:
+					if (nameFriday == ""){
+						nameFriday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週五";
+					}	
+					if (dataFriday.length == 0){
+						DataSet.push([nameFriday, dataFriday]);
+					}
+					dataFriday.push(datatest[i]["data"]);
+					break;
+				case 6:
+					if (nameSaturday == ""){
+						nameSaturday = dateObject.getMonth()+1 + "/" + dateObject.getDate() + "  週六";
+					}	
+					if (dataSaturday.length == 0){
+						DataSet.push([nameSaturday, dataSaturday]);
+					}
+					dataSaturday.push(datatest[i]["data"]);
+					break;
+			}
+		}
+
+		const xCategories = ["00:00", "01:00",	"02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00",
+							"09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", 
+							"18:00", "19:00", "20:00", "21:00", "22:00", "23:00"];
+
+		const xZoomOut = ["0點", "1點", "2點", "3點", "4點", "5點", "6點", "7點", "8點", "9點", "10點", "11點", "12點", 
+						"13點", "14點", "15點", "16點", "17點", "18點", "19點", "20點", "21點", "22點", "23點"]
+
+		const options = {
+			chart: {
+				height: '500',
+				type: 'heatmap'
+			},
+			legend: {
+				position: 'bottom',
+				fontSize: '20px',
+			},
+			plotOptions: {
+				heatmap: {
+					colorScale: colorScaleOptions,
+					// horizontal: true, 嘗試變直
+				}
+			},
+			xaxis: {
+				labels: {
+					style: {
+						fontSize: '15px'
+					}
+				},
+				categories: xCategories,
+			},
+			yaxis: {
+				labels: {
+					style: {
+						fontSize: '15px'
+					},
+				}
+			},
+			tooltip: {
+				y: {
+					format: '',
+					formatter: function (val) {
+						if (val > 155) {
+							return '數值是 ' + val + '  (偏高)';
+						} else if (val > 100 && val < 155) {
+							return '數值是 ' + val + '  (中等)';
+						} else if (val < 100) {
+							return '數值是 ' + val + '  (偏低)';
+						} else {
+							return '數值是 ' + val + '  (null)';
+						}
+					}
+				}
+			},
+			dataLabels: {
+				style: {
+					fontSize: '15px',
+					colors: ['#000']
+				},
+			},
+			series: [
+			{
+				name: DataSet[0][0],
+				data: DataSet[0][1]
+			},
+			{
+				name: DataSet[1][0],
+				data: DataSet[1][1]
+			},
+			{
+				name: DataSet[2][0],
+				data: DataSet[2][1]
+			},
+			{
+				name: DataSet[3][0],
+				data: DataSet[3][1]
+			},
+			{
+				name: DataSet[4][0],
+				data: DataSet[4][1]
+			},
+			{
+				name: DataSet[5][0],
+				data: DataSet[5][1]
+			},
+			{
+				name: DataSet[6][0],
+				data: DataSet[6][1]
+			}
+			],
+
+			responsive: [
+				{
+					breakpoint: 1300,
+					options: {
+						chart: {
+							height: '450'
+						},
+						dataLabels: {
+							style: {
+								fontSize: '10px'
+							},
+							formatter: function (val) {
+								return val;
+							}
+						},
+						/* 嘗試變直的
+						plotOptions: {
+							horizontal: false,
+						},
+						*/
+						yaxis: {
+							labels: {
+								style: {
+									fontSize: '14px'
+								}
+							}
+						},
+						xaxis: {
+							labels: {
+								style: {
+									fontSize: '14px'
+								}
+							},
+							categories: xCategories
+						},
+						legend: {
+							fontSize: '13px'
+						},
+					}
+				},
+				{
+					breakpoint: 900,
+					options: {
+						chart: {
+							height: '400'
+						},
+						dataLabels: {
+							style: {
+								fontSize: '10px'
+							},
+							formatter: function (val) {
+								return Math.round(val);
+							}
+						},
+						yaxis: {
+							labels: {
+								style: {
+									fontSize: '12px'
+								}
+							}
+						},
+						xaxis: {
+							labels: {
+								style: {
+									fontSize: '10px'
+								}
+							},
+							categories: xCategories
+						},
+						legend: {
+							fontSize: '13px',
+						},
+					}
+				},
+				{
+					breakpoint: 545,
+					options: {
+						chart: {
+							height: '350'
+						},
+						dataLabels: {
+							style: {
+								fontSize: '9px'
+							},
+							formatter: function (val) {
+								return Math.round(val);
+							}
+						},
+						yaxis: {
+							labels: {
+								style: {
+									fontSize: '10px'
+								}
+							}
+						},
+						xaxis: {
+							labels: {
+								style: {
+									fontSize: '10px'
+								}
+							},
+							categories: xZoomOut
+						},
+						legend: {
+							fontSize: '7.5px',
+						},
+					}
+				}
+			]
+		};
+
+		const chart = new ApexCharts(document.querySelector("#chart"), options);
+		chart.render();
+
+	</script>
+</body>
+
+</html>
